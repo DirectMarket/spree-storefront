@@ -91,7 +91,7 @@ client.products.list({
 
 The SDK avoids throwing JavaScript [`Error`s][1]. Instead, any error is included in a result object.
 
-To determine whether a call was successful, use `isSuccess()` or `isFail()` methods on the result. Details of a failed call can be retrieved using `fail()`. The method returns a `SpreeSDKError` instance, which is the primary type for all `Error`s returned by the SDK and extends the native JavaScript `Error` type.
+To determine whether a call was successful, use `isSuccess()` or `isFail()` methods on the result. Details of a failed call can be retrieved using `fail()`. The method returns a `SpreeSDKError` instance, which is the primary type for all errors returned by the SDK and extends the native JavaScript `Error` type.
 
 Available `SpreeSDKError` subtypes:
 
@@ -100,7 +100,7 @@ Available `SpreeSDKError` subtypes:
 |`MisconfigurationError`|Signifies the SDK's `Client` was created with improper options. Make sure the values of `host` and other options (if any) provided to `Client` have the correct format.|
 |`NoResponseError`|Spree store could not be reached. Ensure it's running and available under the `host` address provided to the `Client` instance.|
 |`SpreeError`|Spree responded with an error. To debug the issue, check the error's `serverResponse` field. It contains details about the response from Spree, such as the HTTP status code and headers.|
-|`BasicSpreeError`|Extends `SpreeError` with a `error` field provided by Spree and containing a summary of the issue.|
+|`BasicSpreeError`|Extends `SpreeError` with a `summary` field provided by Spree and containing a summary of the issue.|
 |`ExpandedSpreeError`|Extends `BasicSpreeError` with a `errors` field. `errors` contains a detailed explanation of the issue, ex. all the validation errors when trying to add shipping details to a Spree order. The `getErrors` method can be used to retrieve a concrete value inside `errors`, ex. `expSpreeError.getErrors(['bill_address', 'firstname'])`.|
 
 The specific type of error returned by `fail()` can be determined using [`instanceof`][3], ex. `if(response.fail() instanceof BasicSpreeError){...}`.
@@ -471,9 +471,9 @@ Removes a coupon code from the Cart.
 
 __Required token:__ [Bearer token](#bearer-token) or [Order token](#order-token)
 
-__Parameters schema:__
+__Optional parameters schema:__
 ```ts
-coupon_code: string
+coupon_code?: string
 ```
 
 __Success response schema:__ [Success schema](#success-schema)
@@ -576,10 +576,10 @@ __Failure response schema:__ [Error schema](#error-schema)
 __Example:__
 ```ts
 // Logged in user
-const response = await client.cart.orderUpdate({ bearerToken }, { order: {...} })
+const response = await client.checkout.orderUpdate({ bearerToken }, { order: {...} })
 
 // or guest user
-const response = await client.cart.orderUpdate({ orderToken }, { order: {...} })
+const response = await client.checkout.orderUpdate({ orderToken }, { order: {...} })
 ```
 
 ### `orderNext`
@@ -596,10 +596,10 @@ __Example:__
 
 ```ts
 // Logged in user
-const response = await client.cart.orderNext({ bearerToken })
+const response = await client.checkout.orderNext({ bearerToken })
 
 // or guest user
-const response = await client.cart.orderNext({ orderToken })
+const response = await client.checkout.orderNext({ orderToken })
 ```
 
 ### `advance`
@@ -616,10 +616,10 @@ __Example:__
 
 ```ts
 // Logged in user
-const response = await client.cart.advance({ bearerToken })
+const response = await client.checkout.advance({ bearerToken })
 
 // or guest user
-const response = await client.cart.advance({ orderToken })
+const response = await client.checkout.advance({ orderToken })
 ```
 
 ### `complete`
@@ -635,10 +635,10 @@ __Example:__
 
 ```ts
 // Logged in user
-const response = await client.cart.complete({ bearerToken })
+const response = await client.checkout.complete({ bearerToken })
 
 // or guest user
-const response = await client.cart.complete({ orderToken })
+const response = await client.checkout.complete({ orderToken })
 ```
 
 ### `addStoreCredits`
@@ -661,10 +661,10 @@ __Example:__
 
 ```ts
 // Logged in user
-const response = await client.cart.addStoreCredits({ bearerToken }, { amount: 100 })
+const response = await client.checkout.addStoreCredits({ bearerToken }, { amount: 100 })
 
 // or guest user
-const response = await client.cart.addStoreCredits({ orderToken }, { amount: 100 })
+const response = await client.checkout.addStoreCredits({ orderToken }, { amount: 100 })
 ```
 
 ### `removeStoreCredits`
@@ -680,10 +680,10 @@ __Example:__
 
 ```ts
 // Logged in user
-const response = await client.cart.removeStoreCredits({ bearerToken })
+const response = await client.checkout.removeStoreCredits({ bearerToken })
 
 // or guest user
-const response = await client.cart.removeStoreCredits({ orderToken })
+const response = await client.checkout.removeStoreCredits({ orderToken })
 ```
 
 ### `paymentMethods`
@@ -699,10 +699,10 @@ __Example:__
 
 ```ts
 // Logged in user
-const response = await client.cart.paymentMethods({ bearerToken })
+const response = await client.checkout.paymentMethods({ bearerToken })
 
 // or guest user
-const response = await client.cart.paymentMethods({ orderToken })
+const response = await client.checkout.paymentMethods({ orderToken })
 ```
 
 ### `shippingMethods`
